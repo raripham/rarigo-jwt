@@ -1,7 +1,14 @@
 package initializers
 
-import "os"
+import (
+	"log"
+
+	"github.com/joho/godotenv"
+)
 
 func LoadEnvVariable() {
-	DB_URL = os.Getenv("DB_URL")
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 }
