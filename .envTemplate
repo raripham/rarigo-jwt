@@ -1,0 +1,3 @@
+DB_URL="postgres://user:pass@IP:PORT/rarigo"
+
+SECRET=""

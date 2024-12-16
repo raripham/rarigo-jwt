@@ -19,8 +19,9 @@ func RequireAuth(c *gin.Context) {
 	// Get the cookie off req
 	tokenString, err := c.Cookie("Authorization")
 
-	if err != nil {
+	if err != nil || len(tokenString) == 0 {
 		c.AbortWithStatus(http.StatusUnauthorized)
+		return
 	}
 	// Decode/validate it
 
@@ -35,8 +36,9 @@ func RequireAuth(c *gin.Context) {
 		// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
 		return []byte(os.Getenv("SECRET")), nil
 	})
+
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("token error: ", err)
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok {
@@ -49,6 +51,7 @@ func RequireAuth(c *gin.Context) {
 		initializers.DB.First(&user, claims["sub"])
 		if user.ID == 0 {
 			c.AbortWithStatus(http.StatusUnauthorized)
+			return
 		}
 
 		// Attach to req
@@ -58,6 +61,6 @@ func RequireAuth(c *gin.Context) {
 		c.Next()
 	} else {
 		c.AbortWithStatus(http.StatusUnauthorized)
+		return
 	}
-
 }
