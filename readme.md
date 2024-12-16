@@ -10,3 +10,10 @@ go get github.com/joho/godotenv
 go get github.com/githubnemo/CompileDaemon
 go install github.com/githubnemo/CompileDaemon
 ```
+
+flushcache-cms
+```
+npm create vite@latest
+npm install -D tailwindcss
+npx tailwindcss init
+```
