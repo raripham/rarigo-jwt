@@ -16,7 +16,7 @@ func Config() *gin.Engine {
 		backend.GET("/health", func(ctx *gin.Context) {
 			ctx.JSON(http.StatusOK, "health")
 		})
-		backend.POST("/signup", controllers.Signup)
+		backend.POST("/signup", middlewares.RequireAuth, middlewares.RequireAdmin, controllers.Signup)
 		backend.POST("/login", controllers.Login)
 		backend.GET("/validate", middlewares.RequireAuth, controllers.Validate)
 		backend.GET("/cdns", middlewares.RequireAuth, controllers.GetCdns)
