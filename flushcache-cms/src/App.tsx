@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import LoginForm from './components/Login';
 import AdminPage from './components/AdminPage';
+import UserPage from './components/UserPage';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 const App: React.FC = () => {
@@ -16,12 +17,13 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginForm onSubmit={handleLogin}/>} />
-        <Route path="/admin" 
+        <Route path="/admindemo" 
           element={
             isAuthenticated 
               ? <AdminPage /> 
               : <Navigate to="/login" replace />
           } />
+        <Route path="/admin" element={<UserPage/>} />
       </Routes>
     </Router>
     // <div className="App">
