@@ -1,7 +1,9 @@
 // import { DarkThemeToggle } from "flowbite-react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import UserPage from './components/UserPage';
-
+import CdnTable from './components/tables/CdnTable';
+import AdminLayout from './layouts/AdminLayout';
+import CdnLayout from './view/user/layouts/CdnLayout';
+import CFLayout from './view/user/layouts/CFLayout';
 // function App() {
 //   return (
 //     <main className="flex min-h-screen items-center justify-center gap-2 dark:bg-gray-800">
@@ -18,7 +20,18 @@ const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/admin" element={<UserPage/>} />
+        <Route path="/admin" element={
+          <AdminLayout>
+          {/* <AdminPage /> */}
+            <CdnTable />
+          </AdminLayout>
+        } />
+        <Route path="/ui/cfs" element={
+          <CFLayout />
+        } />
+        <Route path="/ui/cdns" element={
+          <CdnLayout />
+        } />
       </Routes>
     </Router>
     // <div className="App">
