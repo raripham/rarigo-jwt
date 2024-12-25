@@ -28,7 +28,7 @@ func Config() *gin.Engine {
 		backend.POST("/signup", middlewares.RequireAuth, middlewares.RequireAdmin, controllers.Signup)
 		backend.POST("/login", controllers.Login)
 		backend.GET("/validate", middlewares.RequireAuth, controllers.Validate)
-		backend.GET("/cdns", middlewares.RequireAuth, controllers.GetCdns)
+		// backend.GET("/cdns", middlewares.RequireAuth, controllers.GetCdns)
 
 		backend.POST("/cfs", controllers.CreateCF)
 		backend.GET("/getallcfs", controllers.GetAllCf)
@@ -37,6 +37,13 @@ func Config() *gin.Engine {
 
 		backend.POST("/cfroles", controllers.CreateCFRole)
 		backend.GET("/cfroles", controllers.GetCFRole)
+
+		backend.POST("/cdns", controllers.CreateCdn)
+		backend.GET("/cfs", controllers.GetCdnByUser)
+		backend.GET("/getallcdns", controllers.GetAllCdns)
+
+		backend.POST("cdnroles", controllers.CreateCdnRole)
+		backend.GET("/cdnroles", controllers.GetCdnRole)
 	}
 
 	return r
