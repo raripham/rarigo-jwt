@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Spinner } from "flowbite-react";
+import { Button, Spinner } from "flowbite-react";
 import { Box } from '@mui/material';
 import Sidebar from '../components/SideBar';
 import CdnTable from '../modules/cdns/CdnTable';
+import CreateCdn from '../modules/cdns/CreateCdn';
 
 interface Cdn {
   cdn_name: string;
@@ -22,7 +23,6 @@ interface User {
 
 const CdnLayout: React.FC = () => {
   const [cdns, setCdns] = useState<Cdn[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
 
   // const apiBaseUrl = process.env.VITE_API_BASE_URL;
 
@@ -45,37 +45,23 @@ const CdnLayout: React.FC = () => {
 
       } catch (error) {
         console.error('Error fetching cdns:', error);
-      } finally {
-        setLoading(false); // Hide the loading spinner
       }
     };
 
     fetchUsers();
   }, []);
-  if (loading) {
-    return (
-      <Spinner aria-label="Loading cdns ...." />
-    );
-  }
-
-  
   return (
     <Box sx={{ display: 'flex' }}>
       <Sidebar />
       {/* Main Content */}
-      
-      {/* <div className="flex flex-col flex-1">
-        <h2 className="text-2xl font-bold mb-4">Cdns</h2>
-        <CdnTable />
-      </div> */}
       <Box sx={{ flex: 1 }}>
-        {/* <h1 className="text-2xl font-bold mb-4">Cdns</h1>
-        <Box sx={{ padding: 2 }}>{children}</Box> */}
         <div className="p-4 sm:ml-4">
-          <div className="container mx-auto p-4">
+          <div className="container mx-auto p-4 space-y-8">
+            <section>
             <h3 className="font-bold mb-4">Cdns</h3>
             <CdnTable data={Cdns_Sample}/>
-            {/* <Button size="sm">Purge</Button> */}
+            </section>
+            <CreateCdn/>
           </div>
         </div>
       </Box> 

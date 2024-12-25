@@ -2,22 +2,21 @@ import React from 'react';
 import { Button } from "flowbite-react";
 import { Box } from '@mui/material';
 import Sidebar from '../components/SideBar';
-import CFTable from '../modules/cloudflare/CFTable';
+import UserTable from '../modules/users/UserTable';
+import CreateUser from '../modules/users/CreateUser';
 
-interface CF {
-  cf_domain: string;
-}
 
 interface User {
   email: string;
   role: string;
 }
 
-const CFs: CF[] = [
-  {cf_domain: "ventory.gg"},
-  {cf_domain: "tocen.co"}]
-// const CFLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-const CFLayout: React.FC = () => {
+const users: User[] = [
+  {email: "user@mail.com", role: ""},
+  {email: "admin@ftech.ai", role: "Admin"},
+  {email: "trongpt@ftech.ai", role: "Admin"}]
+
+const UserLayout: React.FC = () => {
   return (
     <Box sx={{ display: 'flex' }}>
       <Sidebar />
@@ -25,7 +24,8 @@ const CFLayout: React.FC = () => {
         <div className="p-4 sm:ml-4">
           <div className="container mx-auto p-4">
             <h3 className="font-bold mb-4">CloudFlares</h3>
-            <CFTable data={CFs}/>
+            <UserTable data={users}/>
+            <CreateUser/>
           </div>
         </div>
       </Box>
@@ -33,4 +33,4 @@ const CFLayout: React.FC = () => {
   );
 };
 
-export default CFLayout;
+export default UserLayout;

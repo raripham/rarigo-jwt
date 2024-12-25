@@ -1,31 +1,41 @@
 // import { DarkThemeToggle } from "flowbite-react";
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import CdnTable from './components/tables/CdnTable';
-import AdminLayout from './layouts/AdminLayout';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import CdnLayout from './view/user/layouts/CdnLayout';
 import CFLayout from './view/user/layouts/CFLayout';
-// function App() {
-//   return (
-//     <main className="flex min-h-screen items-center justify-center gap-2 dark:bg-gray-800">
-//       <h1 className="text-2xl dark:text-white">
-//         Flowbite React + Create React App
-//       </h1>
-//       <DarkThemeToggle />
-//     </main>
-//   );
-// }
+
+import CFLayoutAdmin from './view/admin/layouts/CFLayout';
+import CdnLayoutAdmin from './view/admin/layouts/CdnLayout';
+import UserLayout from './view/admin/layouts/UserLayout';
+import RoleLayout from './view/admin/layouts/RoleLayout';
+
+import LoginLayout from './view/auth/LoginLayout';
+import { useNavigate } from 'react-router-dom';
 
 const App: React.FC = () => {
 
   return (
     <Router>
       <Routes>
-        <Route path="/admin" element={
-          <AdminLayout>
-          {/* <AdminPage /> */}
-            <CdnTable />
-          </AdminLayout>
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={
+          <LoginLayout />
         } />
+
+        <Route path="/admin" element={<Navigate to="/admin/cfs" replace />} />
+        <Route path="/admin/cfs" element={
+          <CFLayoutAdmin />
+        } />
+        <Route path="/admin/cdns" element={
+          <CdnLayoutAdmin />
+        } />
+        <Route path="/admin/users" element={
+          <UserLayout />
+        } />
+        <Route path="/admin/roles" element={
+          <RoleLayout />
+        } />
+
+        <Route path="/ui" element={<Navigate to="/ui/cfs" replace />} />
         <Route path="/ui/cfs" element={
           <CFLayout />
         } />
@@ -34,9 +44,6 @@ const App: React.FC = () => {
         } />
       </Routes>
     </Router>
-    // <div className="App">
-    //   <LoginForm onSubmit={handleLogin} />
-    // </div>
   );
 };
 

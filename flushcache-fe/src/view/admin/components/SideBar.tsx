@@ -1,14 +1,12 @@
 
 "use client";
 
-import {  Sidebar } from "flowbite-react";
-import { FaGlobe, FaCloud, FaSignOutAlt  } from "react-icons/fa";
+import { Sidebar } from "flowbite-react";
+import { FaUserFriends, FaGlobe, FaCloud, FaUsersCog, FaSignOutAlt  } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
 
 export function SideBar() {
   const navigate = useNavigate();
-  
   const handleLogout = async () => {
     try {
       await fetch('http://localhost:8000/api/logout', {
@@ -24,26 +22,32 @@ export function SideBar() {
     navigate('/login'); // Redirect to login
   };
   return (
+    <div className="sticky top-0 h-screen">
     <Sidebar aria-label="Default sidebar example">
-      <Sidebar.Logo href="#" img="https://flowbite.com/docs/images/logo.svg" imgAlt="FlushCache">
+      <Sidebar.Logo href="/admin" img="https://flowbite.com/docs/images/logo.svg" imgAlt="FlushCache">
         FlushCache
       </Sidebar.Logo>
       <Sidebar.Items>
         <Sidebar.ItemGroup>
-          <Sidebar.Item href="/ui/cfs" icon={FaCloud}>
+          <Sidebar.Item href="/admin/cfs" icon={FaCloud}>
             CloudFlare
           </Sidebar.Item>
-          <Sidebar.Item href="/ui/cdns" icon={FaGlobe}>
+          <Sidebar.Item href="/admin/cdns" icon={FaGlobe}>
             CDN
           </Sidebar.Item>
-        </Sidebar.ItemGroup>
-        <Sidebar.ItemGroup>
+          <Sidebar.Item href="/admin/users" icon={FaUserFriends} label="Admin" labelColor="dark">
+            User
+          </Sidebar.Item>
+          <Sidebar.Item href="/admin/roles" icon={FaUsersCog} label="Admin" labelColor="dark">
+            Roles
+          </Sidebar.Item>
           <Sidebar.Item href="#" icon={FaSignOutAlt} onClick={handleLogout} >
             Log out
           </Sidebar.Item>
         </Sidebar.ItemGroup>
       </Sidebar.Items>
     </Sidebar>
+    </div>
   );
 }
 
