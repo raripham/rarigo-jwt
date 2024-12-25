@@ -14,7 +14,7 @@ func Config() *gin.Engine {
 
 	// CORS config
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:8000", "http://localhost:5173"},
+		AllowOrigins:     []string{"http://localhost:8000", "http://localhost:5173", "http://localhost:3000"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,
@@ -29,6 +29,14 @@ func Config() *gin.Engine {
 		backend.POST("/login", controllers.Login)
 		backend.GET("/validate", middlewares.RequireAuth, controllers.Validate)
 		backend.GET("/cdns", middlewares.RequireAuth, controllers.GetCdns)
+
+		backend.POST("/cfs", controllers.CreateCF)
+		backend.GET("/getallcfs", controllers.GetAllCf)
+		// GET /cdns?email=
+		backend.GET("/cfs", controllers.GetCfByUser)
+
+		backend.POST("/cfroles", controllers.CreateCFRole)
+		backend.GET("/cfroles", controllers.GetCFRole)
 	}
 
 	return r

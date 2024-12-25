@@ -106,7 +106,7 @@ func Login(c *gin.Context) {
 	c.SetCookie("Authorization", tokenString, 3600*4, "", "", false, true)
 
 	c.JSON(http.StatusOK, gin.H{
-		"token": tokenString,
+		"role": user.Role,
 	})
 }
 
