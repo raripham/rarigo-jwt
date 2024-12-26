@@ -110,6 +110,15 @@ func Login(c *gin.Context) {
 		"role": user.Role,
 	})
 }
+func Logout(c *gin.Context) {
+	// clear cookie
+	c.SetCookie("Authorization", "", -1, "/", "", false, true)
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Logged out successfully",
+	})
+
+}
 
 func Validate(c *gin.Context) {
 	// user, _ := c.Get("user")

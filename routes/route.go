@@ -27,6 +27,7 @@ func Config() *gin.Engine {
 		})
 		backend.POST("/signup", middlewares.RequireAuth, middlewares.RequireAdmin, controllers.Signup)
 		backend.POST("/login", controllers.Login)
+		backend.POST("/logout", controllers.Logout)
 		backend.GET("/users", middlewares.RequireAuth, middlewares.RequireAdmin, controllers.GetUser)
 		backend.GET("/validate", middlewares.RequireAuth, controllers.Validate)
 		// backend.GET("/cdns", middlewares.RequireAuth, controllers.GetCdns)
