@@ -1,3 +1,5 @@
+github.com/Northern-Lights/going v0.0.0-20170910000221-0b6a14bc0e60 h1:IHrXPTiVFkEITz9+bhVO2wlvqvTqkwsPZg7bMEpDJmw=
+github.com/Northern-Lights/going v0.0.0-20170910000221-0b6a14bc0e60/go.mod h1:04M8d9O6cpYKxKiANbpgktTUKk4Z6+fa+3ud8tasK+c=
 github.com/bytedance/sonic v1.12.5 h1:hoZxY8uW+mT+OpkcUWw4k0fDINtOcVavEsGfzwzFU/w=
 github.com/bytedance/sonic v1.12.5/go.mod h1:B8Gt/XvtZ3Fqj+iSKMypzymZxw/FVwgIGKzMzT9r/rk=
 github.com/bytedance/sonic v1.12.6 h1:/isNmCUF2x3Sh8RAp/4mh4ZGkcFAX/hLrzrK3AvpRzk=
@@ -9,6 +11,8 @@ github.com/cloudwego/base64x v0.1.4 h1:jwCgWpFanWmN8xoIUHa2rtzmkd5J2plF/dnLS6Xd/
 github.com/cloudwego/base64x v0.1.4/go.mod h1:0zlkT4Wn5C6NdauXdJRhSKRlJvmclQ1hhJgA0rcu/8w=
 github.com/cloudwego/iasm v0.2.0 h1:1KNIy1I1H9hNNFEEH3DVnI4UujN+1zjpuk6gwHLTssg=
 github.com/cloudwego/iasm v0.2.0/go.mod h1:8rXZaNYT2n95jn+zTI1sDr+IgcD2GVs0nlbbQPiEFhY=
+github.com/dariubs/gorm-jsonb v0.1.5 h1:0sc6pBQ0V1i3MqIos3SiQjRxtzs3pTnAZaAtb+SFM20=
+github.com/dariubs/gorm-jsonb v0.1.5/go.mod h1:e6GXwMviS3e9QxADNOWWZq0WBTdxpK2SoYOExMUfRoM=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/fatih/color v1.9.0 h1:8xPHl4/q1VyqGIPif1F+1V3Y3lSmrq01EabUW3CoW5s=

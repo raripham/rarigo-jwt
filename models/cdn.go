@@ -8,3 +8,7 @@ type Cdn struct {
 	User       string `json:"cdn_user" gorm:"column:cdn_user"`
 	Token      string `json:"cdn_token" gorm:"column:cdn_token"`
 }
+
+type PurgeRequest struct {
+	PurgePath string `json:"purge_paths" validate:"required"`
+}

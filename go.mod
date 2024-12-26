@@ -13,10 +13,12 @@ require (
 )
 
 require (
+	github.com/Northern-Lights/going v0.0.0-20170910000221-0b6a14bc0e60 // indirect
 	github.com/bytedance/sonic v1.12.6 // indirect
 	github.com/bytedance/sonic/loader v0.2.1 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
+	github.com/dariubs/gorm-jsonb v0.1.5 // indirect
 	github.com/fatih/color v1.9.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.7 // indirect

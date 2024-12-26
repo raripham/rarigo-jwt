@@ -27,23 +27,29 @@ func Config() *gin.Engine {
 		})
 		backend.POST("/signup", middlewares.RequireAuth, middlewares.RequireAdmin, controllers.Signup)
 		backend.POST("/login", controllers.Login)
+		backend.GET("/users", middlewares.RequireAuth, middlewares.RequireAdmin, controllers.GetUser)
 		backend.GET("/validate", middlewares.RequireAuth, controllers.Validate)
 		// backend.GET("/cdns", middlewares.RequireAuth, controllers.GetCdns)
 
-		backend.POST("/cfs", controllers.CreateCF)
-		backend.GET("/getallcfs", controllers.GetAllCf)
+		backend.POST("/cfs", middlewares.RequireAuth, middlewares.RequireAdmin, controllers.CreateCF)
+		backend.GET("/getallcfs", middlewares.RequireAuth, middlewares.RequireAdmin, controllers.GetAllCf)
 		// GET /cdns?email=
-		backend.GET("/cfs", controllers.GetCfByUser)
+		backend.GET("/cfs", middlewares.RequireAuth, controllers.GetCfByUser)
 
-		backend.POST("/cfroles", controllers.CreateCFRole)
-		backend.GET("/cfroles", controllers.GetCFRole)
+		backend.POST("/cfroles", middlewares.RequireAuth, middlewares.RequireAdmin, controllers.CreateCFRole)
+		backend.GET("/cfroles", middlewares.RequireAuth, middlewares.RequireAdmin, controllers.GetCFRole)
 
-		backend.POST("/cdns", controllers.CreateCdn)
-		backend.GET("/cfs", controllers.GetCdnByUser)
-		backend.GET("/getallcdns", controllers.GetAllCdns)
+		backend.POST("/cfs/purge", middlewares.RequireAuth, controllers.PurgeCacheCF)
 
-		backend.POST("cdnroles", controllers.CreateCdnRole)
-		backend.GET("/cdnroles", controllers.GetCdnRole)
+		backend.POST("/cdns", middlewares.RequireAuth, middlewares.RequireAdmin, controllers.CreateCdn)
+		backend.GET("/cdns", middlewares.RequireAuth, controllers.GetCdnByUser)
+		backend.GET("/getallcdns", middlewares.RequireAuth, middlewares.RequireAdmin, controllers.GetAllCdns)
+
+		backend.POST("/cdnroles", middlewares.RequireAuth, middlewares.RequireAdmin, controllers.CreateCdnRole)
+		backend.GET("/cdnroles", middlewares.RequireAuth, middlewares.RequireAdmin, controllers.GetCdnRole)
+
+		backend.POST("/cdns/purge", middlewares.RequireAuth, controllers.PurgeCacheCDN)
+
 	}
 
 	return r

@@ -1,12 +1,19 @@
 package controllers
 
 import (
+	"bytes"
+	"encoding/json"
+	"io/ioutil"
+	"log"
 	"net/http"
+	"net/url"
 	"rarigo-jwt/initializers"
+	"rarigo-jwt/middlewares"
 	"rarigo-jwt/models"
+	"time"
 
+	gormjsonb "github.com/dariubs/gorm-jsonb"
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
 )
 
 // func GetCdns(c *gin.Context) {
@@ -48,7 +55,7 @@ func GetCdnByUser(c *gin.Context) {
 	}
 	var cdns []models.Cdn
 
-	initializers.DB.Model(&models.CdnRole{}).Where("cdn_roles.email = ?", user.Email).Joins("left join cdns on cdns.cf_domain = cf_roles.cf_domain").Scan(&cdns)
+	initializers.DB.Model(&models.CdnRole{}).Where("cdn_roles.email = ?", user.Email).Joins("left join cdns on cdns.cdn_name = cdn_roles.cdn_name").Scan(&cdns)
 
 	c.JSON(http.StatusOK, cdns)
 }
@@ -78,12 +85,11 @@ func CreateCdn(c *gin.Context) {
 		return
 	}
 
-	// Hash the Token
-	token, err := bcrypt.GenerateFromPassword([]byte(cdn.Token), 10)
-
+	// Encrypt the Token
+	token, err := middlewares.Encrypt(cdn.Token, initializers.PublicKey)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to hash password",
+			"error": "Failed to encrypt token",
 		})
 		return
 	}
@@ -139,4 +145,124 @@ func CreateCdnRole(c *gin.Context) {
 	}
 	// resp
 	c.JSON(http.StatusOK, gin.H{})
+}
+
+func PurgeCacheCDN(c *gin.Context) {
+	var cdnbody struct {
+		models.CdnRole
+		Role string
+		models.PurgeRequest
+	}
+	// read body
+	if c.Bind(&cdnbody) != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to read body PurgeCache CDN",
+		})
+		return
+	}
+
+	// check user permission
+	if cdnbody.Role != "Admin" {
+		resultRole := initializers.DB.Find(&models.CdnRole{}, "email = ? AND cf_domain = ?", cdnbody.Email, cdnbody.CdnName)
+		if resultRole.Error != nil || resultRole.RowsAffected == 0 {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "no permission for purge this domain",
+			})
+			return
+		}
+	}
+
+	// get cdn info
+	var cdn models.Cdn
+	resultCdn := initializers.DB.First(&cdn, "cdn_name = ?", cdnbody.CdnName)
+	if resultCdn.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to get info CF",
+		})
+		return
+	}
+
+	// Decrypt token
+	token, err := middlewares.Decrypt(cdn.Token, initializers.PrivateKey)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to decrypt token CDN",
+		})
+		return
+	}
+
+	// purge cache
+	var purgeBodyReq models.PurgeRequest
+	var purgeURL url.URL
+	if cdnbody.PurgePath == "all" {
+		purgeURL = url.URL{
+			Scheme: "https",
+			Host:   cdn.Domain,
+			Path:   "cdn_resources/" + string(cdn.ResourceID) + "/purge_all.json",
+		}
+
+	} else {
+		purgeURL = url.URL{
+			Scheme: "https",
+			Host:   cdn.Domain,
+			Path:   "cdn_resources/" + string(cdn.ResourceID) + "/purge",
+		}
+
+	}
+	purgeBodyReq.PurgePath = cdnbody.PurgePath
+	jsonBody, err := json.Marshal(purgeBodyReq)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to marshal struct purgebody CDN",
+		})
+		return
+	}
+
+	purgeReq, err := http.NewRequest(
+		http.MethodPost,
+		purgeURL.String(),
+		bytes.NewBuffer(jsonBody),
+	)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to create purge cache CDN Request",
+		})
+		return
+	}
+	purgeReq.Header.Set("Content-Type", "application/json")
+	purgeReq.Header.Set("Accept", "application/json")
+	purgeReq.SetBasicAuth(cdn.User, token)
+	client := http.Client{
+		Timeout: 30 * time.Second,
+	}
+	purgeResp, err := client.Do(purgeReq)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to making purge cache CDN Request",
+		})
+		return
+	}
+	defer purgeResp.Body.Close()
+
+	purgeBody, err := ioutil.ReadAll(purgeResp.Body)
+	if err != nil {
+		log.Println("Error reading purge CDN response body:", err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Error reading purge CDN response body",
+		})
+		return
+	}
+
+	var notice gormjsonb.JSONB
+
+	err = json.Unmarshal(purgeBody, &notice)
+	if err != nil {
+		log.Println("Error reading purge CDN response body:", err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Error reading purge CDN response body",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, notice)
 }

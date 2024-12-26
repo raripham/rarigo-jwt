@@ -17,6 +17,7 @@ func Signup(c *gin.Context) {
 	var body struct {
 		Email    string
 		Password string
+		Role     string
 	}
 
 	if c.Bind(&body) != nil {
@@ -37,7 +38,7 @@ func Signup(c *gin.Context) {
 	}
 
 	// Create the user
-	user := models.User{Email: body.Email, Password: string(hash)}
+	user := models.User{Email: body.Email, Password: string(hash), Role: body.Role}
 	result := initializers.DB.Create(&user)
 
 	if result.Error != nil {
@@ -116,4 +117,15 @@ func Validate(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "I'm logged in",
 	})
+}
+
+func GetUser(c *gin.Context) {
+	var users []models.User
+
+	resultUser := initializers.DB.Find(&users)
+	if resultUser.Error != nil {
+		return
+	}
+
+	c.JSON(http.StatusOK, users)
 }
