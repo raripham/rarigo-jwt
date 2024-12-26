@@ -6,12 +6,14 @@ import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 
 
+
 export function CreateUser() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isAmdin, setAdmin] = useState(false);
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [role, setRole] = useState<string>('');
 
   const handleButtonClick = () => {
     setIsOpen(true); // Open the form modal
@@ -23,14 +25,34 @@ export function CreateUser() {
     setPassword('');
     setAdmin(false)
   };
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission logic here
-    const data = {
-      email: email,
-      password: password
+    if (isAmdin === true)  {
+      setRole("Admin");
     }
-    console.log(data);
+    // const data = {
+    //   email: email,
+    //   password: password,
+    //   role: role
+    // }
+    try {
+      const response = await fetch('http://localhost:8000/api/signup', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+          role: role
+        })
+      });    
+    } catch (error) {
+      console.error('Error create user:', error);
+    }
+
     closeModal(); // Close the modal after submission
   };
   return (

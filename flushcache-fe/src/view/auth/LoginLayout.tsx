@@ -37,15 +37,15 @@ const LoginLayout: React.FC = () => {
         })
       });
       if (response.status === 200) {
-        const data = await response.json(); 
-        setUser(data)
+        const data = await response.json();
+        const userData: User = {
+          email: data.email,
+          role: data.role
+        }
+        setUser(userData)
         setSuccessMessage('Login successful!');
-        // setEmail('');
         setPassword('');
-        // setRole('');
-        console.log('info:', email, user?.role)
-        // const token = Cookies.get("Authorization")
-        // console.log("token: " ,token)
+
         localStorage.setItem('userInfo', JSON.stringify({email: email, role: user?.role}));
         if (user?.role === 'Admin') {
             navigate('/admin')

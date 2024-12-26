@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from "flowbite-react";
 import { Box } from '@mui/material';
 import Sidebar from '../components/SideBar';
 import UserTable from '../modules/users/UserTable';
 import CreateUser from '../modules/users/CreateUser';
+import AlertComponent from '../components/Alert';
 
 
 interface User {
@@ -11,12 +12,36 @@ interface User {
   role: string;
 }
 
-const users: User[] = [
-  {email: "user@mail.com", role: ""},
-  {email: "admin@ftech.ai", role: "Admin"},
-  {email: "trongpt@ftech.ai", role: "Admin"}]
-
 const UserLayout: React.FC = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  
+    // const apiBaseUrl = process.env.VITE_API_BASE_URL;
+  
+    useEffect(() => {
+      // Fetch data from the API
+      const fetchUsers = async () => {
+        try {
+          const user: User = JSON.parse(localStorage.getItem('userInfo') || '{}');
+          // console.log("user: ", user, user?.email)
+          const response = await fetch('http://localhost:8000/api/users?' + new URLSearchParams({
+            email: user?.email,
+          }), {
+            method: 'GET',
+            credentials: 'include',
+          });
+          const data = await response.json();
+          if (data != null) {
+            // console.log(data)
+            setUsers(data); // Set the users data
+          }
+  
+        } catch (error) {
+          console.error('Error fetching users:', error);
+        }
+      };
+  
+      fetchUsers();
+    }, []);
   return (
     <Box sx={{ display: 'flex' }}>
       <Sidebar />
