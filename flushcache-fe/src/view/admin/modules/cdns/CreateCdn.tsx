@@ -3,7 +3,7 @@
 
 import { Table, Button, Modal, TextInput, Label, Select, Checkbox, ToggleSwitch } from "flowbite-react";
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 export function CreateCdn() {
@@ -12,7 +12,10 @@ export function CreateCdn() {
   const [address, setAddress] = useState<string>('');
   const [user, setUser] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [cdnName, setCdnName] = useState<string>('');
   const [resourceID, setResourceID] = useState<number | null>(null);
+
+  const navigate = useNavigate();
 
   const handleButtonClick = () => {
     setIsOpen(true); // Open the form modal
@@ -20,12 +23,11 @@ export function CreateCdn() {
 
   const closeModal = () => {
     setIsOpen(false);
-    setAddress('')
     setUser('');
     setPassword('');
 
   };
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission logic here
     const data = {
@@ -35,6 +37,28 @@ export function CreateCdn() {
       password: password
     }
     console.log(data);
+    try {
+      const response = await fetch('http://localhost:8000/api/cdns', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          cdn_name: cdnName,
+          cdn_resourceid: resourceID,
+          cdn_domain: address,
+          cdn_user: user,
+          cdn_token: password,
+        })
+      });
+      if (response.status === 401 ){
+        navigate("/login");
+      }   
+    } catch (error) {
+      console.error('Error create user:', error);
+    }
+    
     closeModal(); // Close the modal after submission
   };
   return (
@@ -56,6 +80,10 @@ export function CreateCdn() {
             <div>
               <Label htmlFor="password" value="Password" />
               <TextInput id="password" value={password} type="password" onChange={(e) => setPassword(e.target.value)} required />
+            </div>
+            <div>
+              <Label htmlFor="cdnName" value="Name" />
+              <TextInput id="cdnName" value={cdnName} type="text" onChange={(e) => setCdnName(e.target.value)} placeholder="funzy.vn" required />
             </div>
             <div>
               <Label htmlFor="resourceid" value="Resource ID" />

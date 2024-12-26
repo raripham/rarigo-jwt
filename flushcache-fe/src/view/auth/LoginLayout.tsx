@@ -1,6 +1,7 @@
 import { Button, Label, TextInput, Checkbox } from 'flowbite-react';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 // import Cookies from 'js-cookie';
 
 interface User {
@@ -15,6 +16,8 @@ const LoginLayout: React.FC = () => {
   const [error, setError] = useState<string>('');
   const [successMessage, setSuccessMessage] = useState<string>('');
   const navigate = useNavigate();
+
+  const { userC, login } = useAuth();
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,15 +42,18 @@ const LoginLayout: React.FC = () => {
       if (response.status === 200) {
         const data = await response.json();
         const userData: User = {
-          email: data.email,
+          email: email,
           role: data.role
         }
         setUser(userData)
         setSuccessMessage('Login successful!');
         setPassword('');
 
-        localStorage.setItem('userInfo', JSON.stringify({email: email, role: user?.role}));
-        if (user?.role === 'Admin') {
+        // localStorage.setItem('userInfo', JSON.stringify({email: email, role: user?.role}));
+        // sessionStorage.setItem('userInfo', JSON.stringify({email: email, role: user?.role}));
+        login(userData);
+        console.log(userC)
+        if (userC?.role === "Admin") {
             navigate('/admin')
         } else {
             navigate('/ui')

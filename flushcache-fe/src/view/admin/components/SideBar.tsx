@@ -17,7 +17,7 @@ export function SideBar() {
       console.error('Error fetching logout:', error);
     }
     
-    localStorage.removeItem('userInfo');
+    sessionStorage.removeItem('userInfo');
 
     navigate('/login'); // Redirect to login
   };

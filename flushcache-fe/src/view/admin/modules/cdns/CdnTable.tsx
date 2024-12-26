@@ -1,8 +1,10 @@
 
 "use client";
 
+import { Email } from "@mui/icons-material";
 import { Table, Button, Modal, TextInput, Label } from "flowbite-react";
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 interface CdnTableProps {
   data: Array<{
@@ -12,10 +14,18 @@ interface CdnTableProps {
   }>;
 }
 
+interface User {
+  email: string;
+  role: string;
+}
+
 export function CdnTable({ data }: CdnTableProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedRow, setSelectedRow] = useState<{ cdn_resourceid: number } | null>(null);
+  const user: User = JSON.parse(sessionStorage.getItem('userInfo') || '{}');
   const [pathInput, setPathInput] = useState<string>('');
+
+  const navigate = useNavigate();
 
   const handleButtonClick = (row: { cdn_resourceid: number; }) => {
     setSelectedRow(row);
@@ -27,12 +37,34 @@ export function CdnTable({ data }: CdnTableProps) {
     setSelectedRow(null);
     setPathInput('');
   };
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission logic here
     const data = {
+      email: user.email,
+      role: user.role,
       resource_id: selectedRow?.cdn_resourceid,
       purge_paths: pathInput
+    }
+    try {
+      const response = await fetch('http://localhost:8000/api/cdns/purge', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: user.email,
+          role: user.role,
+          resource_id: selectedRow?.cdn_resourceid,
+          purge_paths: pathInput
+        })
+      });
+      if (response.status === 401 ){
+        navigate("/login");
+      }   
+    } catch (error) {
+      console.error('Error create user:', error);
     }
     console.log(data);
     closeModal(); // Close the modal after submission
@@ -46,8 +78,8 @@ export function CdnTable({ data }: CdnTableProps) {
           <Table.HeadCell>Domain</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          {data.map((item) => (
-            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+          {data.map((item, index) => (
+            <Table.Row key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800">
               <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
               {item.cdn_name}
               </Table.Cell>

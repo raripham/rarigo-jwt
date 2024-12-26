@@ -9,11 +9,13 @@ import UserLayout from './view/admin/layouts/UserLayout';
 import RoleLayout from './view/admin/layouts/RoleLayout';
 
 import LoginLayout from './view/auth/LoginLayout';
+import { AuthProvider } from './view/auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const App: React.FC = () => {
 
   return (
+    <AuthProvider>
     <Router>
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
@@ -44,6 +46,7 @@ const App: React.FC = () => {
         } />
       </Routes>
     </Router>
+    </AuthProvider>
   );
 };
 

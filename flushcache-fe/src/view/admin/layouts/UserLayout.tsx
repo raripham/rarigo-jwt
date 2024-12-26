@@ -5,6 +5,7 @@ import Sidebar from '../components/SideBar';
 import UserTable from '../modules/users/UserTable';
 import CreateUser from '../modules/users/CreateUser';
 import AlertComponent from '../components/Alert';
+import { useNavigate } from 'react-router-dom';
 
 
 interface User {
@@ -14,6 +15,7 @@ interface User {
 
 const UserLayout: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const navigate = useNavigate();
   
     // const apiBaseUrl = process.env.VITE_API_BASE_URL;
   
@@ -21,7 +23,7 @@ const UserLayout: React.FC = () => {
       // Fetch data from the API
       const fetchUsers = async () => {
         try {
-          const user: User = JSON.parse(localStorage.getItem('userInfo') || '{}');
+          const user: User = JSON.parse(sessionStorage.getItem('userInfo') || '{}');
           // console.log("user: ", user, user?.email)
           const response = await fetch('http://localhost:8000/api/users?' + new URLSearchParams({
             email: user?.email,
@@ -29,6 +31,9 @@ const UserLayout: React.FC = () => {
             method: 'GET',
             credentials: 'include',
           });
+          if (response.status === 401) {
+            navigate('/login')
+          }
           const data = await response.json();
           if (data != null) {
             // console.log(data)

@@ -29,14 +29,29 @@ export function CreateCfRole({ users, cfs }: RoleProps) {
     setUser('');
     setCfDomain('');
   };
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission logic here
-    const data = {
-      user: user,
-      cf_domain: cf_domain
+    // const data = {
+    //   user: user,
+    //   cf_domain: cf_domain
+    // }
+    // console.log(data);
+    try {
+      const response = await fetch('http://localhost:8000/api/cfroles', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: user,
+          cf_domain: cf_domain,
+        })
+      });    
+    } catch (error) {
+      console.error('Error create user:', error);
     }
-    console.log(data);
     closeModal(); // Close the modal after submission
   };
   return (

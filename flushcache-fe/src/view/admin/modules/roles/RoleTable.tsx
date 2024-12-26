@@ -39,8 +39,8 @@ export function RoleTable({ users, cfs, cdns, cfrole, cdnrole }: RoleProps) {
           <Table.HeadCell>Domain</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          {cfrole.map((item) => (
-            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+          {cfrole.map((item, index) => (
+            <Table.Row key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800">
               <Table.Cell>{item.email}</Table.Cell>
               <Table.Cell>{item.cf_domain}</Table.Cell>
             </Table.Row>
@@ -59,11 +59,11 @@ export function RoleTable({ users, cfs, cdns, cfrole, cdnrole }: RoleProps) {
           <Table.HeadCell>Resource ID</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          {cdnrole.map((item) => (
-            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+          {cdnrole.map((item, index) => (
+            <Table.Row key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800">
               <Table.Cell>{item.email}</Table.Cell>
               <Table.Cell>{item.cdn_name}</Table.Cell>
-              <Table.Cell>{item.cdn_resourceid}</Table.Cell>
+              {/* <Table.Cell>{item.cdn_resourceid}</Table.Cell> */}
             </Table.Row>
           ))}
         </Table.Body>

@@ -1,6 +1,7 @@
 
 import { Table, Button, Modal, TextInput, Label, Select, Checkbox, ToggleSwitch } from "flowbite-react";
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 
 export function CreateCF() {
@@ -10,6 +11,8 @@ export function CreateCF() {
   const [token, setToken] = useState<string>('');
   const [domain, setDomain] = useState<string>('');
   const [zoneid, setZoneID] = useState<string>('');
+
+  const navigate = useNavigate();
 
   const handleButtonClick = () => {
     setIsOpen(true); // Open the form modal
@@ -22,7 +25,7 @@ export function CreateCF() {
     setDomain('');
     setZoneID('');
   };
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission logic here
     const data = {
@@ -32,6 +35,26 @@ export function CreateCF() {
       zoneid: zoneid,
     }
     console.log(data);
+    try {
+      const response = await fetch('http://localhost:8000/api/cfs', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          cf_domain: domain,
+          cf_zoneid: zoneid,
+          cf_endpoint: endpoint,
+          cf_token: token,
+        })
+      });
+      if (response.status === 401 ){
+        navigate("/login");
+      }   
+    } catch (error) {
+      console.error('Error create user:', error);
+    }
     closeModal(); // Close the modal after submission
   };
   return (

@@ -5,9 +5,11 @@ import {  Sidebar } from "flowbite-react";
 import { FaGlobe, FaCloud, FaSignOutAlt  } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { useAuth } from "../../auth/AuthContext";
 
 export function SideBar() {
   const navigate = useNavigate();
+  const { userC, logout } = useAuth();
   
   const handleLogout = async () => {
     try {
@@ -19,7 +21,8 @@ export function SideBar() {
       console.error('Error fetching logout:', error);
     }
     
-    localStorage.removeItem('userInfo');
+    sessionStorage.removeItem('userInfo');
+    
 
     navigate('/login'); // Redirect to login
   };
